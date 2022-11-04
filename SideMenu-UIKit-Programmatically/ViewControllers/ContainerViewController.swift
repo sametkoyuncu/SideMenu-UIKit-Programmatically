@@ -99,25 +99,34 @@ extension ContainerViewController: HomeViewControllerDelegate {
 
 extension ContainerViewController: MenuViewControllerDelegate {
     func didSelect(menu menuItem: MenuViewController.MenuOptions) {
-        toggleMenu { [weak self] in
-            switch menuItem {
-            case .home:
-                break
-            case .info:
-                // Add into child
-                guard let vc = self?.infoVC else { return }
-                self?.addChild(vc)
-                self?.homeVC.view.addSubview(vc.view)
-                vc.view.frame = self?.homeVC.view.bounds ?? .zero
-                vc.didMove(toParent: self)
-            case .appRating:
-                break
-            case .shareApp:
-                break
-            case .settings:
-                break
-            }
+        toggleMenu(completion: nil)
+        switch menuItem {
+        case .home:
+            resetToHome()
+        case .info:
+            addInfo()
+        case .appRating:
+            break
+        case .shareApp:
+            break
+        case .settings:
+            break
         }
+    }
+    
+    func addInfo() {
+        let vc = infoVC
+        homeVC.addChild(vc)
+        homeVC.view.addSubview(vc.view)
+        vc.view.frame = view.bounds
+        vc.didMove(toParent: homeVC)
+        homeVC.title = vc.title 
+    }
+    
+    func resetToHome() {
+        infoVC.view.removeFromSuperview()
+        infoVC.didMove(toParent: nil)
+        homeVC.title = "Home"
     }
 }
 
